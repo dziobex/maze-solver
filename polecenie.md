@@ -12,4 +12,4 @@ Zastosować implementację grafu zgodną z opisem zadania
 # Faza 3: Wyszukiwanie min. ścieżki
 Implementować algorytm wyszukiwania minimalnej ścieżki w grafie (wg. sumy wag od startu do końca), pokazać przebytą ścieżkę
 * dijkstra
-* wyświetlanie rankingu ścieżek
+* wyświetlanie najkrótszej ścieżki (wagi)

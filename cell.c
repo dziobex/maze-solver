@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "maze.h"
+#include "cell.h"
 
 cell init_cell( int y, int x, double rnd_value ) {
     cell new_cell = (cell) { .y = y, .x = x, .visited = 0 };

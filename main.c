@@ -6,6 +6,8 @@
 #include <time.h>
 
 #include "maze.h"
+#include "cell.h"
+#include "solver.h"
 
 #define BUFF_SIZE 100
 
@@ -13,39 +15,6 @@ static cell maze[MAX_SIZE][MAX_SIZE] = {};
 static int maze_size = 10;
 
 static int start_cell = 0, end_cell = 0;
-
-void passage( cell* previous_popped, cell* popped ) {
-    if ( previous_popped != NULL ) {
-        popped->visited = 1;
-        // nad
-        if ( previous_popped->y < popped->y ) {
-            previous_popped->bounds[2] = 0;
-            popped->bounds[0] = 0;
-        }
-        // pod
-        if ( previous_popped->y > popped->y ) {
-            previous_popped->bounds[0] = 0;
-            popped->bounds[2] = 0;
-        }
-        // z prawo
-        if ( previous_popped->x < popped->x ) {
-            previous_popped->bounds[1] = 0;
-            popped->bounds[3] = 0;
-        }
-        // z lewo
-        if ( previous_popped->x > popped->x ) {
-            previous_popped->bounds[3] = 0;
-            popped->bounds[1] = 0;
-        }
-    }
-
-    cell* next = leave( popped );
-
-    while ( next != NULL ) {
-        passage( popped, next );
-        next = leave( popped );
-    }
-}
 
 int main( int argc, char **argv ) {
 
@@ -75,7 +44,6 @@ int main( int argc, char **argv ) {
     srand( time( NULL ));
 
     /* ---- TU GENERUJE LABIRYNT ---- */
-
 
     for ( int y = 0; y < maze_size; ++y )
         for ( int x = 0; x < maze_size; ++x ) {
@@ -108,6 +76,8 @@ int main( int argc, char **argv ) {
             maze[y][x].value = weight;
         }
     }
+
+    /* ---- MACIERZ SĄSIEDZTWA ---- */
     
     print_maze( maze, maze_size );
 
