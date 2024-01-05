@@ -1,1 +1,5 @@
 *.docx
+*.a
+*.exe
+
+.vscode/

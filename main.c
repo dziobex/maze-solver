@@ -11,16 +11,12 @@
 
 #define BUFF_SIZE 100
 
-static cell maze[MAX_SIZE][MAX_SIZE] = {};
-static int maze_size = 10;
-
-static int start_cell = 0, end_cell = 0;
-
 int main( int argc, char **argv ) {
 
     /* ---- TU PRZYJMUJE INPUT ---- */
 
     int repeat;
+    int maze_size = 10;
     char buff[ BUFF_SIZE ];
 
     do {
@@ -43,43 +39,34 @@ int main( int argc, char **argv ) {
 
     srand( time( NULL ));
 
-    /* ---- TU GENERUJE LABIRYNT ---- */
+    /* ---- WYGENEROWANIE LABIRYNTU ---- */
 
-    for ( int y = 0; y < maze_size; ++y )
-        for ( int x = 0; x < maze_size; ++x ) {
-
-            maze[y][x] = init_cell( y, x, 0 );
-            init_nears( &maze[y][x],
-                y - 1 >= 0 ? &maze[y - 1][x] : NULL,
-                x + 1 < maze_size ? &maze[y][x + 1] : NULL,
-                y + 1 < maze_size ? &maze[y + 1][x] : NULL,
-                x - 1 >= 0 ? &maze[y][x - 1] : NULL );
-        }
+    maze m;
+    init_maze( &m, maze_size );
 
     /* ---- LOSOWY PUNKT WEJSCIA I WYJSCIA ---- */
 
-    start_cell = rand() % maze_size;
-    end_cell = rand() % maze_size;
-
-    maze[0][start_cell].bounds[0] = 0;
-    maze[maze_size - 1][end_cell].bounds[2] = 0;
+    int start = rand() % maze_size;
+    int finish = rand() % maze_size;
+    
+    set_maze_entries( &m, start, finish );
 
     /* ---- PODRÓŻ PRZEZ LABIRYNT ---- */
 
-    passage( NULL, &maze[0][start_cell] );
+    passage( NULL, &(m.m[0][start]) );
 
     /* ---- PRZYDZIELANIE LOSOWYCH WAG ---- */
 
     for ( int y = 0; y < maze_size; ++y ) {
         for ( int x = 0; x < maze_size; ++x ) {
-            double weight = (double)( rand() * 10.0 ) / (double)RAND_MAX;
-            maze[y][x].value = weight;
+            double weight = ((double)rand() / RAND_MAX) * 10.0;
+            m.m[y][x].value = weight;
         }
     }
 
-    /* ---- MACIERZ SĄSIEDZTWA ---- */
-    
-    print_maze( maze, maze_size );
+    print_maze( &m );
+    shortest_path( &m );
+    print_maze( &m );
 
     return EXIT_SUCCESS;
 }
