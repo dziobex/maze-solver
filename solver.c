@@ -7,16 +7,14 @@
 
 cell* min_cost( maze* m ) {
     cell *c = NULL;
-    double vl = 10000;
+    double vl = 1000;
 
-    for ( int i = 0; i < m->m_size; ++i ) {
-        for ( int j = 0; j < m->m_size; ++j ) {
+    for ( int i = 0; i < m->m_size; ++i )
+        for ( int j = 0; j < m->m_size; ++j )
             if ( m->m[i][j].visited == 0 && m->m[i][j].total_value < vl ) {
                 c = &m->m[i][j];
                 vl = c->total_value;
             }
-        }
-    }
 
     return c;
 }
@@ -32,20 +30,21 @@ void shortest_path( maze* m ) {
         }
     }
 
+    /* jest to startowy wierzchołek */
     m->m[0][m->start].total_value = 0;
-
     cell* current_cell = min_cost( m );
 
     while ( current_cell != NULL ) {
-        // printf( "(%i, %i) ", current_cell->y, current_cell->x );
         current_cell->visited = 1;
 
+        /* sprawdzam czy nie doszłam już do wierzchołka końcowego */
         if ( current_cell->y == m->m_size - 1 && current_cell->x == m->finish ) {
             printf("\nSCIEZKA NAJKROTSZEJ SCIEZKI, wspolrzede wierzcholkow na macierzy (od konca):\n");
 
             cell* cc = current_cell;
             cc->bounds[2] = 2;
 
+            /* wyświetlenie drogi ( przy okazji zmiany wizualne na macierzy labiryntu aby jakoś ładnie 'pokazać' tę drogę )*/
             while ( cc != NULL ) {
                 cc->label = 'o';
                 printf("(%i, %i) ", cc->y, cc->x );
@@ -62,12 +61,10 @@ void shortest_path( maze* m ) {
                 cc = cc->previous;
             }
             printf("\nNajmniejsza suma wag: %f\n\n", current_cell->total_value );
-            
             break;
-
         }
 
-        // najmniejsze koszty dojścia dla somsiadów
+        /* najmniejsze koszty dojścia dla somsiadów */
 
         double new_cost = current_cell->total_value + current_cell->value;
         for( int i = 0; i < 4; ++i ) {
@@ -75,7 +72,6 @@ void shortest_path( maze* m ) {
                 && current_cell->near[i]->total_value > new_cost ) {
                     current_cell->near[i]->total_value = new_cost;
                     current_cell->near[i]->previous = current_cell;
-                    // printf( "%f ", current_cell->value );
                 }
         }
 

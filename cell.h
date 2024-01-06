@@ -4,8 +4,7 @@
 typedef struct cell cell;
 
 struct cell {
-    int id;             // który to wierzchołek
-    char label;         // . - nieodwiedzone, * - część najkrótszej scieżki
+    char label;         // . - nieodwiedzone, * - część najkrótszej scieżki ( potrzebne do wyświetlania )
 
     cell* near[4];      // top, right, bottom, left - wierzchołki, z którymi dany wierzchołek jest połączony
     char bounds[4];     // granice ze wszond powszond

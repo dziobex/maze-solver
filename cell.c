@@ -9,7 +9,7 @@
 cell init_cell( int y, int x, int size ) {
     cell new_cell = (cell) { .y = y, .x = x, .visited = 0 };
     
-    new_cell.id = y * size + x;
+    // new_cell.id = y * size + x;
     new_cell.value = 0.0;
     new_cell.total_value = 1000;    // ="nieskończoność"
     new_cell.label = ' ';
@@ -19,6 +19,7 @@ cell init_cell( int y, int x, int size ) {
     return new_cell;
 }
 
+/* dajemy wskaźniki do sąsiadów c */
 void init_nears( cell *c, cell *t, cell *r, cell *b, cell *l ) {
     for ( int i = 0; i < 4; ++i)
         c->near[i] = malloc( sizeof( cell ) );
@@ -28,6 +29,10 @@ void init_nears( cell *c, cell *t, cell *r, cell *b, cell *l ) {
     c->near[3] = l;
 }
 
+/*
+    zwraca losowego, nieodwiedzonego sąsiada komórki c
+    lub NULL gdy takiej komórki nie ma
+*/
 cell *leave( cell *c ) {
     cell *next  = NULL;
 
@@ -35,6 +40,7 @@ cell *leave( cell *c ) {
     int ids [4];
     int count = 0;
 
+    /* reloaded zawiera wszystkich nieodwiedzonych sąsiadów, count - ile tych sąsiadków jest */
     for ( int i = 0; i < 4; ++i ) {
         reloaded[i] = malloc( sizeof(cell ) );
         if ( c->near[i] != NULL && c->near[i]->visited == 0 ) {
@@ -43,12 +49,13 @@ cell *leave( cell *c ) {
         }
     }
     
+    /* oops - nie ma takich sąsiadów */
     if ( count == 0 ) {
         return NULL;
     }
 
+    /* zwrot losowego sąsiada */
     int rnd_index = rand() % count;
-    
     next = reloaded[ rnd_index ]; // 0 1 2 3
 
     // c->near[ ids[rnd_index] ] = NULL;
